@@ -1,4 +1,4 @@
-## netty 的组建
+## netty 的组件
 * handler
 * EventLoopGroup
 ```

@@ -54,7 +54,8 @@ public class MyNioServer {
         System.out.println("ServerSocketChannel正在循环监听");
         SocketChannel clientChannel = serverChannel.accept();
         clientChannel.configureBlocking(false);
-        clientChannel.register(key.selector(),SelectionKey.OP_READ);
+        SelectionKey key1= clientChannel.register(key.selector(),SelectionKey.OP_READ);
+        System.out.println(key1);
     }
 
     public void doRead(SelectionKey key) throws IOException {
