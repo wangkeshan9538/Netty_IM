@@ -23,12 +23,21 @@ public class NettyClient {
                     }
                 });
 
-        Channel channel = bootstrap.connect("127.0.0.1", 8000).channel();
+        Channel channel = bootstrap.connect("127.0.0.1", 8080).addListener(future -> {
+            if (future.isSuccess()) {
+                System.out.println("连接成功!");
+            } else {
+                System.err.println("连接失败!");
+            }
 
-        while (true) {
+        }).channel();
+
+        //while (true) {
             channel.writeAndFlush(new Date() + ": hello world!");
             Thread.sleep(2000);
-        }
+        //}
+        channel.close();
+
     }
 }
 
