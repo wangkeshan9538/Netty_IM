@@ -8,8 +8,19 @@
 ```
 
 * ServerBootstrap
+
+    
 * channel
+
+    与NIO中的概念一样,代表一个连接,
 * pipeline
+
+    pipeline() 返回的是和这条连接相关的逻辑处理链，采用了责任链模式
+    pipline 的链中顺序对channel 和message 进行处理
 * ChannelFuture
+
 * buffer
+
 * ChannelHandlerContext
+
+

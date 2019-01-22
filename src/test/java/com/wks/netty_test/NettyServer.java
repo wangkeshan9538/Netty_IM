@@ -34,13 +34,15 @@ public class NettyServer {
                 .option(ChannelOption.SO_BACKLOG, 1024)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline().addLast(new StringDecoder());
-                        ch.pipeline().addLast(new SimpleChannelInboundHandler<String>() { // 4
+                        //ch.pipeline().addLast(new StringDecoder());
+                        /*ch.pipeline().addLast(new SimpleChannelInboundHandler<String>() { // 4
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, String msg) {
                                 System.out.println(msg);
                             }
-                        });
+                        });*/
+
+                        ch.pipeline().addLast(new FirstServerHandler());
                     }
                 });
         bind(serverBootstrap, 8080);

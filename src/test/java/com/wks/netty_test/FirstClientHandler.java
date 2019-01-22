@@ -17,6 +17,26 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
 
         // 2. 写数据
         ctx.channel().writeAndFlush(buffer);
+
+
+        buffer.capacity();
+
+        //如果发现容量不足，则进行扩容，直到扩容到 maxCapacity，超过这个数，就抛异常
+        buffer.maxCapacity();
+
+        //writerIndex - readerIndex  当前刻度的字节数
+        buffer.readableBytes();
+
+        //当前可写的字节数,单如果容量达到capacity ,那么就拓展,直至到达maxCapacity
+        buffer.writableBytes();
+
+        //获得和设置读指针
+        buffer.readerIndex();
+        buffer.readerIndex(1);
+
+        //获得和设置写指针
+        buffer.writerIndex();
+        buffer.writerIndex(1);
     }
 
     private ByteBuf getByteBuf(ChannelHandlerContext ctx) {
@@ -32,3 +52,9 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
         return buffer;
     }
 }
+
+/*
+*
+*
+*
+*/

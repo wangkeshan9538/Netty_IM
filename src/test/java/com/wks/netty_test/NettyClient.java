@@ -30,14 +30,14 @@ public class NettyClient {
                     }
                 });
 
-        Channel channel = bootstrap.connect("127.0.0.1", 8080).addListener(future -> {
+        /*Channel channel = bootstrap.connect("127.0.0.1", 8080).addListener(future -> {
             if (future.isSuccess()) {
                 System.out.println("连接成功!");
             } else {
                 System.err.println("连接失败!");
             }
 
-        }).channel();
+        }).channel();*/
 
         connect(bootstrap, "localhost", 8080, MAX_RETRY);
     }
