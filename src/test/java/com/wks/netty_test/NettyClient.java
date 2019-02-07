@@ -26,7 +26,7 @@ public class NettyClient {
                 .handler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel ch) {
-                        ch.pipeline().addLast(new FirstClientHandler());
+                        //ch.pipeline().addLast(new FirstClientHandler());
                     }
                 });
 

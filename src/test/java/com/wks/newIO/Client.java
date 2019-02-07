@@ -1,4 +1,4 @@
-package newIO;
+package com.wks.newIO;
 
 
 import java.io.*;

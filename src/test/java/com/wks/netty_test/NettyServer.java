@@ -14,8 +14,8 @@ public class NettyServer {
     public static void main(String[] args) {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
 
-        NioEventLoopGroup boss = new NioEventLoopGroup();
-        NioEventLoopGroup worker = new NioEventLoopGroup();
+        NioEventLoopGroup boss = new NioEventLoopGroup(1);
+        NioEventLoopGroup worker = new NioEventLoopGroup(2);
         serverBootstrap
                 .group(boss, worker)
                 .attr(AttributeKey.newInstance("serverName"), "nettyServer")

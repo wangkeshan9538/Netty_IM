@@ -17,7 +17,7 @@ public class ByteBufTest {
         buffer.writeInt(12);
         print("writeInt(12)", buffer);
 
-        // write 方法改变写指针, 写完之后写指针等于 capacity 的时候，buffer 不可写
+        // write 方法改变写指针, 写完之后写指针等于 capacity 的时候，buffer 不可写  TODO 这个地方很奇怪，为什么指针等于capacity 的时候 ，不可写 而再写的时候 就扩容了
         buffer.writeBytes(new byte[]{5});
         print("writeBytes(5)", buffer);
 
