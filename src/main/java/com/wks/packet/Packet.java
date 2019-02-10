@@ -66,8 +66,7 @@ public class Packet implements PacketAnalysis<Packet> {
 
 
     @Override
-    public ByteBuf encode() {
-        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
+    public ByteBuf encode(ByteBuf byteBuf) {
 
         // 3. 实际编码过程
         byteBuf.writeInt(this.getMagicNum());

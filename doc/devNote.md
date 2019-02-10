@@ -8,3 +8,5 @@ SerializerAlgorithm 直接对应 ，但以后如果这层关系需要解耦的�
 
 我做了一个packetAnalysis 的接口 定义decode encode 方法 以及 packet 与 command Serializer 的转换逻辑 ， 还想定义一个packet本身的接口 ，但问题在于packet应该是一个纯的entity，
 那这个接口，就只有get  set 方法可以定义，但如果协议各部分长度不一样，那就影响到了get方法的返回值，所以协议entity之间并不应该有 继承关系，而PacketAnalysis 就带一个泛型 来指定packet类，
+
+一个疑问：buffer 和channel 之间是怎么样的一个关系，buffer 的回收是怎样的

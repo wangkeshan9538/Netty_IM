@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
  * 泛型 表示使用的 packet 类型
  */
 public interface PacketAnalysis<T> {
-    ByteBuf encode();
+    ByteBuf encode(ByteBuf byteBuf);
 
     /**
      * 当出现更多类型协议的时候 ，这里就
