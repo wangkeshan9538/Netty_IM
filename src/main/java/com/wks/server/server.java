@@ -1,5 +1,7 @@
 package com.wks.server;
 
+import com.wks.codec.PacketDecoder;
+import com.wks.codec.PacketEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -25,9 +27,6 @@ public class server {
                 .handler(new ChannelInitializer<NioServerSocketChannel>() {
                     @Override
                     protected void initChannel(NioServerSocketChannel ch) throws Exception {
-                        /**
-                         * childHandler()用于指定处理新连接数据的读写处理逻辑，handler()用于指定在服务端启动过程中的一些逻辑，通常情况下呢，我们用不着这个方法。
-                         */
                     }
                 })
 
@@ -37,15 +36,11 @@ public class server {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-                        //ch.pipeline().addLast(new StringDecoder());
-                        /*ch.pipeline().addLast(new SimpleChannelInboundHandler<String>() { // 4
-                            @Override
-                            protected void channelRead0(ChannelHandlerContext ctx, String msg) {
-                                System.out.println(msg);
-                            }
-                        });*/
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginHandler());
+                        ch.pipeline().addLast(new MessageHandler());
 
-                        ch.pipeline().addLast(new ServerHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         bind(serverBootstrap, 8080);

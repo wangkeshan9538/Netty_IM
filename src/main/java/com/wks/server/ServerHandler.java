@@ -3,7 +3,7 @@ package com.wks.server;
 import com.wks.Utils;
 import com.wks.packet.Command;
 import com.wks.packet.Packet;
-import com.wks.packet.data.LoginPacketData;
+import com.wks.packet.data.LoginRequestData;
 import com.wks.packet.data.LoginResponseData;
 import com.wks.packet.data.MessageRequestData;
 import com.wks.packet.data.MessageResponseData;
@@ -13,6 +13,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import static com.wks.Utils.LOGIN_SUCCESS;
 
+@Deprecated
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
@@ -25,7 +26,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
         if (p2.getCommandOperation() == Command.LOGIN_REQUEST) {
             //反序列化数据
-            LoginPacketData o = SerializerAlgorithm.getSerializer(p2.getSerializerAlgorithm()).deserialize(LoginPacketData.class, p2.data);
+            LoginRequestData o = SerializerAlgorithm.getSerializer(p2.getSerializerAlgorithm()).deserialize(LoginRequestData.class, p2.data);
             System.out.println(o);
             // 验证
             if (valid(o)) {
@@ -51,7 +52,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private boolean valid(LoginPacketData o) {
+    private boolean valid(LoginRequestData o) {
         System.out.println("登录信息：" + o);
         return true;
     }

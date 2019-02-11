@@ -1,9 +1,10 @@
 package com.wks.packet.data;
 
+import com.wks.packet.Command;
 import lombok.Data;
 
 @Data
-public class LoginResponseData {
+public class LoginResponseData implements EncodeData{
 
     private Boolean isSuccessful;
 
@@ -15,4 +16,8 @@ public class LoginResponseData {
     }
 
 
+    @Override
+    public byte getCommand() {
+        return Command.LOGIN_RESPONSE;
+    }
 }

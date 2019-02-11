@@ -2,6 +2,8 @@ package com.wks.client;
 
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.wks.Utils;
+import com.wks.codec.PacketDecoder;
+import com.wks.codec.PacketEncoder;
 import com.wks.packet.Command;
 import com.wks.packet.Packet;
 import com.wks.packet.data.MessageRequestData;
@@ -33,7 +35,11 @@ public class client {
                 .handler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel ch) {
-                        ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginHandler());
+                        ch.pipeline().addLast(new MessageHandler());
+
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         connect(bootstrap, "localhost", 8080, MAX_RETRY);
@@ -67,6 +73,11 @@ public class client {
                     System.out.println("输入消息发送至服务端: ");
                     Scanner sc = new Scanner(System.in);
                     String line = sc.nextLine();
+
+                    if(line.equals("exit")){
+                        channel.close();
+                        System.exit(0);
+                    }
 
                     MessageRequestData message = new MessageRequestData(line);
                     Packet p = new Packet(Command.MESSAGE_REQUEST, SerializerAlgorithm.DEFAULT.serialize(message));

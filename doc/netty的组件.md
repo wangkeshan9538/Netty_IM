@@ -5,6 +5,7 @@
 
 第二个子接口 ChannelOutBoundHandler 是处理写数据的逻辑，它是定义我们一端在组装完响应之后，把数据写到对端的逻辑，比如，我们封装好一个 response 对象，接下来我们有可能对这个 response 做一些其他的特殊逻辑，然后，再编码成 ByteBuf，最终写到对端，它里面最核心的一个方法就是 write()，读者可以将 ChannelOutBoundHandler 的逻辑处理过程与 TCP 的七层协议的封装过程联系起来，我们在应用层组装响应之后，通过层层协议的封装，直到最底层的物理层。
 
+为什么 read 方法中msg 类型是 Object，因为pipeline 采用的是责任链模型，上一个msg 会传入到下一个handler，所以第一个handler的实例其实是byteBuffer，而后面的handler的msg 取决于前面的handler传入类型
 ```
 
 * EventLoopGroup

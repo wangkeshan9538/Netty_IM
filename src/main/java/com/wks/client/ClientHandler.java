@@ -3,7 +3,7 @@ package com.wks.client;
 import com.wks.Utils;
 import com.wks.packet.Command;
 import com.wks.packet.Packet;
-import com.wks.packet.data.LoginPacketData;
+import com.wks.packet.data.LoginRequestData;
 import com.wks.packet.data.LoginResponseData;
 import com.wks.packet.data.MessageResponseData;
 import com.wks.serializer.SerializerAlgorithm;
@@ -11,11 +11,13 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+
+@Deprecated
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        LoginPacketData data = new LoginPacketData(1, "wks", "wks");
+        LoginRequestData data = new LoginRequestData(1, "wks", "wks");
         Packet p = new Packet(Command.LOGIN_REQUEST, SerializerAlgorithm.DEFAULT.serialize(data));
         ByteBuf buf = p.encode(ctx.alloc().buffer());
         ctx.channel().writeAndFlush(buf);
@@ -23,7 +25,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws InterruptedException {
+    public void channelRead(ChannelHandlerContext ctx, Object msg)  {
         ByteBuf byteBuf = (ByteBuf) msg;
 
         //解码

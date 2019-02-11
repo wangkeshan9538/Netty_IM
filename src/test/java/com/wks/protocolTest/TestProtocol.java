@@ -3,7 +3,7 @@ package com.wks.protocolTest;
 import com.wks.packet.Command;
 import com.wks.packet.Packet;
 import com.wks.packet.PacketAnalysis;
-import com.wks.packet.data.LoginPacketData;
+import com.wks.packet.data.LoginRequestData;
 import com.wks.serializer.Serializer;
 import com.wks.serializer.SerializerAlgorithm;
 import io.netty.buffer.ByteBuf;
@@ -19,7 +19,7 @@ public class TestProtocol {
     public static void main(String[] args) {
 
         // packet 到buffer
-        LoginPacketData data = new LoginPacketData(1, "wks", "wks");
+        LoginRequestData data = new LoginRequestData(1, "wks", "wks");
         Packet p = new Packet(Command.LOGIN_REQUEST, SerializerAlgorithm.DEFAULT.serialize(data));
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
 
