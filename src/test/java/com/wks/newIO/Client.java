@@ -13,7 +13,7 @@ public class Client {
         BufferedReader bufferedReader = null;
         try {
             client = new Socket();
-            client.connect(new InetSocketAddress("localhost",8686));
+            client.connect(new InetSocketAddress("localhost",8080));
             printWriter = new PrintWriter(client.getOutputStream(),true);
             printWriter.println("hello");
             printWriter.println("hello2");

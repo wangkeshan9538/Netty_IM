@@ -2,6 +2,7 @@ package com.wks.server;
 
 import com.wks.codec.PacketDecoder;
 import com.wks.codec.PacketEncoder;
+import com.wks.codec.Spliter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -36,6 +37,8 @@ public class server {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
+
+                        ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginHandler());
                         ch.pipeline().addLast(new MessageHandler());

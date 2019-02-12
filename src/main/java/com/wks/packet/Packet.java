@@ -11,6 +11,7 @@ import lombok.Data;
  */
 @Data
 public class Packet implements PacketAnalysis<Packet> {
+    public final static Integer MAGIC_NUM = 1;
     /**
      * 魔法数
      */

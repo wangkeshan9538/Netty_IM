@@ -4,6 +4,7 @@ import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.wks.Utils;
 import com.wks.codec.PacketDecoder;
 import com.wks.codec.PacketEncoder;
+import com.wks.codec.Spliter;
 import com.wks.packet.Command;
 import com.wks.packet.Packet;
 import com.wks.packet.data.MessageRequestData;
@@ -16,6 +17,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.AttributeKey;
 
 import java.util.Scanner;
@@ -35,6 +37,10 @@ public class client {
                 .handler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel ch) {
+
+
+                        ch.pipeline().addLast(new Spliter());
+
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginHandler());
                         ch.pipeline().addLast(new MessageHandler());
