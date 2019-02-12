@@ -7,13 +7,13 @@ import lombok.Data;
 @Data
 public class LoginRequestData implements EncodeData{
 
-    private Integer userId;
+    private String userId;
 
     private String username;
 
     private String password;
 
-    public LoginRequestData(Integer userId, String username, String password) {
+    public LoginRequestData(String userId, String username, String password) {
         this.userId = userId;
         this.username = username;
         this.password = password;

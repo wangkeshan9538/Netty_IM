@@ -17,7 +17,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        LoginRequestData data = new LoginRequestData(1, "wks", "wks");
+        LoginRequestData data = new LoginRequestData("1", "wks", "wks");
         Packet p = new Packet(Command.LOGIN_REQUEST, SerializerAlgorithm.DEFAULT.serialize(data));
         ByteBuf buf = p.encode(ctx.alloc().buffer());
         ctx.channel().writeAndFlush(buf);
@@ -37,7 +37,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             LoginResponseData o = SerializerAlgorithm.getSerializer(p2.getSerializerAlgorithm()).deserialize(LoginResponseData.class, p2.data);
             // 验证
             if (o.getIsSuccessful()) {
-                Utils.markAsLogin(ctx.channel());
+                Utils.markLogin(ctx.channel());
                 System.out.println("登录成功");
             } else {
                 System.out.println("登录失败" + "错误代码：" + o.getCode());

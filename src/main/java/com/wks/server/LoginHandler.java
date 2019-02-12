@@ -1,5 +1,6 @@
 package com.wks.server;
 
+import com.wks.Utils;
 import com.wks.packet.Command;
 import com.wks.packet.Packet;
 import com.wks.packet.data.LoginRequestData;
@@ -17,11 +18,18 @@ public class LoginHandler extends SimpleChannelInboundHandler<LoginRequestData> 
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestData msg) throws Exception {
         // 验证
         if (valid(msg)) {
-            //标记登录
-            //返回
             LoginResponseData response = new LoginResponseData(true, LOGIN_SUCCESS);
             ctx.channel().writeAndFlush(response);
+
+            //绑定session
+            Utils.bindSession(new Session(msg.getUserId(), msg.getUsername()), ctx.channel());
         }
+    }
+
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        Utils.unBindSession(ctx.channel());
     }
 
 

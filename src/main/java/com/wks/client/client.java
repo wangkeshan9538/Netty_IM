@@ -7,6 +7,7 @@ import com.wks.codec.PacketEncoder;
 import com.wks.codec.Spliter;
 import com.wks.packet.Command;
 import com.wks.packet.Packet;
+import com.wks.packet.data.LoginRequestData;
 import com.wks.packet.data.MessageRequestData;
 import com.wks.serializer.SerializerAlgorithm;
 import io.netty.bootstrap.Bootstrap;
@@ -51,7 +52,7 @@ public class client {
         connect(bootstrap, "localhost", 8080, MAX_RETRY);
     }
 
-    final static int MAX_RETRY=5;
+    final static int MAX_RETRY = 5;
 
     private static void connect(Bootstrap bootstrap, String host, int port, int retry) {
         bootstrap.connect(host, port).addListener(future -> {
@@ -71,24 +72,42 @@ public class client {
         });
     }
 
-    private static void startConsoleThread(Channel channel){
-        System.out.println("开始监控用户输入");
-        new Thread(()->{
-            while(!Thread.interrupted()){
-                if (Utils.hasLogin(channel)) {
-                    System.out.println("输入消息发送至服务端: ");
-                    Scanner sc = new Scanner(System.in);
-                    String line = sc.nextLine();
 
-                    if(line.equals("exit")){
+    public static Object waitForLoginEnd = new Object();
+
+    private static void startConsoleThread(Channel channel) {
+        System.out.println("开始监控用户输入");
+        Scanner sc = new Scanner(System.in);
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                if (!Utils.clientHasLogin(channel)) {
+                    System.out.print("输入userID userName Password 登录: ");
+
+                    String userId = sc.next();
+                    String userName = sc.next();
+                    String passWord = sc.next();
+
+                    LoginRequestData data = new LoginRequestData(userId, userName, passWord);
+                    channel.writeAndFlush(data);
+
+                    //阻塞
+                    synchronized (waitForLoginEnd) {
+                        try {
+                            waitForLoginEnd.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    System.out.println("登录成功，可以发送");
+                } else {
+                    String toUserId = sc.next();
+                    String message = sc.next();
+                    channel.writeAndFlush(new MessageRequestData(toUserId, message));
+
+                    /*if(line.equals("exit")){
                         channel.close();
                         System.exit(0);
-                    }
-
-                    MessageRequestData message = new MessageRequestData(line);
-                    Packet p = new Packet(Command.MESSAGE_REQUEST, SerializerAlgorithm.DEFAULT.serialize(message));
-                    ByteBuf buf = p.encode(channel.alloc().buffer());
-                    channel.writeAndFlush(buf);
+                    }*/
                 }
             }
         }).start();

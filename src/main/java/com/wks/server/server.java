@@ -38,15 +38,24 @@ public class server {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
 
+                        ch.pipeline().addLast(new LifeCyCleTestHandler());
+
+                        //检验模数 和拆包
                         ch.pipeline().addLast(new Spliter());
+
+                        //解码
                         ch.pipeline().addLast(new PacketDecoder());
+                        //登录
                         ch.pipeline().addLast(new LoginHandler());
+                        //检验登录
+                        ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageHandler());
 
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         bind(serverBootstrap, 8080);
+        System.out.println("初始化完成");
     }
 
 

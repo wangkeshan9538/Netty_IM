@@ -19,7 +19,7 @@ public class TestProtocol {
     public static void main(String[] args) {
 
         // packet 到buffer
-        LoginRequestData data = new LoginRequestData(1, "wks", "wks");
+        LoginRequestData data = new LoginRequestData("1", "wks", "wks");
         Packet p = new Packet(Command.LOGIN_REQUEST, SerializerAlgorithm.DEFAULT.serialize(data));
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
 

@@ -45,7 +45,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             System.out.println("客户端消息："+o);
 
             //反馈
-            MessageResponseData messageResponseData=new MessageResponseData("服务端回复【" + o.getMessage() + "】");
+            MessageResponseData messageResponseData=new MessageResponseData("","","服务端回复【" + o.getMessage() + "】");
             Packet p = new Packet(Command.MESSAGE_REQUEST, SerializerAlgorithm.DEFAULT.serialize(messageResponseData));
             ByteBuf buf = p.encode(ctx.alloc().buffer());
             ctx.channel().writeAndFlush(buf);
