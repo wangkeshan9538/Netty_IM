@@ -1,22 +1,26 @@
 <template>
   <div class="container">
-    <van-index-bar>
-      <van-index-anchor index="A" />
-      <van-cell title="文本" />
-      <van-cell title="文本" />
-      <van-cell title="文本" />
+ 
+      <template v-for="curr in userList.list">
+        <van-index-anchor  v-bind:index="curr.letter" v-bind:key="curr.letter" />
 
-      <van-index-anchor index="B" />
-      <van-cell title="文本" />
-      <van-cell title="文本" />
-      <van-cell title="文本" />
+        <template v-for="{userName,userId} in curr.data">
+          <van-cell v-bind:title="userName" v-bind:key="userId" />
+        </template>
+      </template>
     </van-index-bar>
   </div>
 </template>
 
 <script>
- 
+import { pySegSort, userList, refreshList } from "@/ws/getUserList.js";
+
 export default {
-  name: "Room"
+  name: "Room",
+  data: () => {
+    return {
+      userList
+    };
+  }
 };
 </script>

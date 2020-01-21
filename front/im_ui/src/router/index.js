@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
-
+import {pySegSort,userList,refreshList} from '@/ws/getUserList.js'
 Vue.use(VueRouter)
 
 const routes = [
@@ -26,6 +26,11 @@ const routes = [
       {
         path: 'Room',
         component: () => import(/* webpackChunkName: "about" */ '../views/Room.vue'),
+        beforeEnter: (to, from, next) => {
+          console.log('获取list')
+          refreshList();
+          next()
+        }
       }
     ]
   }, {
@@ -40,4 +45,6 @@ const router = new VueRouter({
   routes
 })
 
+
+ 
 export default router

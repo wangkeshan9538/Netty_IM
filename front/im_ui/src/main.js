@@ -5,6 +5,7 @@ import store from './store'
 import Mint from 'mint-ui';
 import Vant from 'vant';
 import 'vant/lib/index.css';
+import './ws/ws.js'
 
 Vue.use(Vant);
 Vue.use(Mint);

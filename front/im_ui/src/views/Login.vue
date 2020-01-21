@@ -33,7 +33,7 @@
     <van-row type="flex" justify="center">
       <van-col span="12">
         <van-cell-group>
-          <van-field left-icon="contact" v-model="value" placeholder="请输入用户名" />
+          <van-field left-icon="contact" v-model="userName" placeholder="请输入用户名" />
         </van-cell-group>
       </van-col>
     </van-row>
@@ -41,14 +41,14 @@
     <van-row type="flex" justify="center">
       <van-col span="12">
         <van-cell-group>
-          <van-field left-icon="contact" v-model="value" type="password" placeholder="密码" />
+          <van-field left-icon="contact" v-model="passwd" type="password" placeholder="密码" />
         </van-cell-group>
       </van-col>
     </van-row>
 
     <van-row type="flex" justify="center">
       <van-col span="8">
-        <van-button type="default" size="small" to="main">登录</van-button>
+        <van-button type="default" to="main" size="small" @click="click">登录</van-button> <!---->
       </van-col>
     </van-row>
   </div>
@@ -57,9 +57,26 @@
 <script>
 import { Field } from "vant";
 import { Button } from "vant";
+import {loginFuc} from  '@/ws/login.js'
+
+
+
 export default {
   name: "Login",
- 
+
+  data:()=>{return{
+    userName:"",
+    passwd:""
+  }},
+  methods:{
+    click:function(){
+      loginFuc(this.userName,this.passwd,(obj)=>{
+        sessionStorage.setItem('loginUser', JSON.stringify({"userName":obj.req.data.userName,"userId":obj.resp.data.userId}));
+      })
+    }
+  }
+
+
 };
 </script>
 

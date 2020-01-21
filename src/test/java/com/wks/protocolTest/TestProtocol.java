@@ -1,18 +1,15 @@
 package com.wks.protocolTest;
 
-import com.wks.packet.Command;
-import com.wks.packet.Packet;
-import com.wks.packet.PacketAnalysis;
-import com.wks.packet.data.LoginRequestData;
-import com.wks.serializer.Serializer;
-import com.wks.serializer.SerializerAlgorithm;
+import com.wks.customProtocol.packet.Command;
+import com.wks.customProtocol.packet.Packet;
+import com.wks.customProtocol.packet.PacketAnalysis;
+import com.wks.customProtocol.packet.data.LoginRequestData;
+import com.wks.customProtocol.serializer.Serializer;
+import com.wks.customProtocol.serializer.SerializerAlgorithm;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.wks.packet.Packet.*;
+import static com.wks.customProtocol.packet.Packet.*;
 
 public class TestProtocol {
 
