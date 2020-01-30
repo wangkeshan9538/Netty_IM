@@ -1,5 +1,6 @@
 import {send,commands,packet,registerHandle} from '@/ws/ws.js';
 
+//按照拼音和字母分类联系人列表
 function pySegSort(arr, empty) {
     if (!String.prototype.localeCompare)
         return null;
@@ -26,28 +27,27 @@ function pySegSort(arr, empty) {
         });
         if (empty || curr.data.length) {
             segs.push(curr);
-            curr.data.sort(function (a, b) {
-                return a.localeCompare(b, "zh");
-            });
         }
     });
     return segs;
 }
 
 
+//数据类型
 
-class resp { constructor(userId,userName) { this.userId = userId,this.userName=userName } }
-
-
+//在线用户列表
 var userList={list:[]};
 
-function handler(resp){
-    var list=pySegSort(resp.data)
+//消息处理handler
+function handler(packet){
+    var list=pySegSort(packet.data)
     userList.list=list;
 }
-//注册处理方法
+
+//向ws core 中 注册消息处理方法
 registerHandle(commands.get('getUserList'),handler)
 
+//对外提供注册方法
 function refreshList(){
     //组packet
     var p=new packet(commands.get('getUserList'),null,null)

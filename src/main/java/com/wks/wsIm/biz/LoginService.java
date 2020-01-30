@@ -2,7 +2,7 @@ package com.wks.wsIm.biz;
 
 import com.wks.wsIm.domain.req.Login;
 import com.wks.wsIm.domain.resp.LoginResp;
-import com.wks.wsIm.domain.resp.User;
+import com.wks.wsIm.domain.resp.UserResp;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
@@ -17,28 +17,28 @@ import static com.wks.wsIm.domain.Commands.LOGIN;
 @Slf4j
 public class LoginService extends BaseService<Login, LoginResp> {
 
-    private final static Map<User, Channel> USER_POOL = new HashMap<>();
 
     public final static AttributeKey<Session> SESSION = AttributeKey.newInstance("SESSION");
+
 
     @Override
     LoginResp process(MsgContext context, Login login) {
         //如果已经登录过，就用之前的userId
-        Session lastLogin=context.getChannel().attr(SESSION).get();
+        Session lastLogin = context.getChannel().attr(SESSION).get();
         String oldUserId = null;
-        if(lastLogin!=null){
-            oldUserId=lastLogin.getUser().getUserId();
+        if (lastLogin != null) {
+            oldUserId = lastLogin.getUser().getUserId();
         }
 
         log.info("登录=》", login.getUserName());
 
         //generate userID
-        String userId = oldUserId==null?generateUserId():oldUserId;
+        String userId = oldUserId == null ? generateUserId() : oldUserId;
 
-        User user = new User(userId, login.getUserName());
+        UserInfo user = new UserInfo(userId, login.getUserName(), context.getChannel());
 
-        USER_POOL.put(user, context.getChannel());
-        context.getChannel().attr(SESSION).set(new Session(true, user));
+        UserService.addUserInfo(userId, user);
+        context.getChannel().attr(SESSION).set(new Session( user));
 
         return new LoginResp(userId);
     }
@@ -48,7 +48,5 @@ public class LoginService extends BaseService<Login, LoginResp> {
         return UUID.randomUUID().toString();
     }
 
-    public static Map getUserPool() {
-        return USER_POOL;
-    }
+
 }

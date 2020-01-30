@@ -1,4 +1,4 @@
-package com.wks.wsIm;
+package Test;
 
 import java.util.ArrayList;
 import java.util.List;

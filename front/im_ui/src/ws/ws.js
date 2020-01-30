@@ -87,7 +87,11 @@ class MsgHandle{
 //存储命令
 const commands =new Map([
     ['login','0'],
-    ['getUserList','1']
+    ['getUserList','1'],
+    ['SEND_MSSAGE','2'],
+    ['addFriend','3'],
+    ['ADD_NOTIRY','4'],
+    ['MESSAGE_NOTIFY','5']
 ])
 
 //存储命令对应的处理器

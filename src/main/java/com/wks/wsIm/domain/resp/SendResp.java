@@ -2,14 +2,10 @@ package com.wks.wsIm.domain.resp;
 
 import lombok.Data;
 
-@Data
-public class SendResp {
+public class SendResp extends CommonResp{
 
-    boolean succss;
-    String reason;
 
-    public SendResp(boolean succss, String reason) {
-        this.succss = succss;
-        this.reason = reason;
+    public SendResp(String success, String reason) {
+        super(success, reason);
     }
 }

@@ -34,9 +34,10 @@ const routes = [
       }
     ]
   }, {
-    path: '/Chat',
+    path: '/Chat/:sendToId/:sendToName',
     name: 'Chat',
     component: () => import(/* webpackChunkName: "about" */ '../views/Chat.vue'),
+    props: true 
   }
 
 ]

@@ -15,10 +15,7 @@
  */
 package com.wks.wsIm.server;
 
-import com.wks.wsIm.biz.LoginService;
-import com.wks.wsIm.biz.MsgContext;
-import com.wks.wsIm.biz.Router;
-import com.wks.wsIm.biz.Session;
+import com.wks.wsIm.biz.*;
 import com.wks.wsIm.domain.Packet;
 import com.wks.wsIm.serializer.JSONSerializer;
 import io.netty.channel.Channel;
@@ -43,7 +40,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
 
     Router router = new Router();
 
-    JSONSerializer serializer = new JSONSerializer();
+    public static JSONSerializer serializer = new JSONSerializer();
 
 
     @Override
@@ -57,7 +54,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
             if (frame.isFinalFragment()) {
                 String msg = joinMsg(messages);
                 messages.clear();
-                result = router.router(generateContext(ctx.channel()), req = serializer.deserialize(msg));
+                req = serializer.deserialize(msg);
+                result = router.router(generateContext(ctx.channel(),req.getTraceId()), req);
                 if (result != null) {
                     ctx.channel().writeAndFlush(new TextWebSocketFrame(serializer.serialize(result)));
                 }
@@ -69,7 +67,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
         }
     }
 
-
+    //如果信息被分帧，需要拼接
     public String joinMsg(List<TextWebSocketFrame> messages) {
         StringBuilder builder = new StringBuilder();
         messages.stream().forEach((c) -> {
@@ -78,9 +76,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
         return builder.toString();
     }
 
-    MsgContext generateContext(Channel channel) {
+    MsgContext generateContext(Channel channel,String traceId) {
         MsgContext context = new MsgContext();
         context.setChannel(channel);
+        context.setTraceId(traceId);
         return context;
     }
 
@@ -90,6 +89,6 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
         Session session = ctx.channel().attr(SESSION).get();
         if (session == null || session.getUser() == null) return;
         log.info(session.getUser().getUserName() + "退出登录");
-        LoginService.getUserPool().remove(session.getUser());
+        UserService.removeUser(session.getUser().getUserId());
     }
 }

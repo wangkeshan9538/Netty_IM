@@ -5,7 +5,11 @@ import store from './store'
 import Mint from 'mint-ui';
 import Vant from 'vant';
 import 'vant/lib/index.css';
+
+//让这些js初始化
 import './ws/ws.js'
+import './ws/getUserList.js'
+import './ws/addFriend.js'
 
 Vue.use(Vant);
 Vue.use(Mint);

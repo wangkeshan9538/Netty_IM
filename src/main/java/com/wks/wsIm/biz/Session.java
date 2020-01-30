@@ -1,21 +1,22 @@
 package com.wks.wsIm.biz;
 
-import com.wks.wsIm.domain.resp.User;
+import com.wks.wsIm.domain.resp.UserResp;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
 /**
  * 标志 channel 里的用户信息
  */
-@Data
+@Setter
+@Getter
 public class Session {
 
-    boolean isLogin;
 
-    User user;
+    UserInfo user;
 
-    public Session(boolean isLogin, User user) {
-        this.isLogin = isLogin;
+    public Session(UserInfo user) {
         this.user = user;
     }
 }
