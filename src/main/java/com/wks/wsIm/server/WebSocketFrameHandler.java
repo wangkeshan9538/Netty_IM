@@ -17,6 +17,8 @@ package com.wks.wsIm.server;
 
 import com.wks.wsIm.biz.*;
 import com.wks.wsIm.domain.Packet;
+import com.wks.wsIm.domain.resp.ErrorResp;
+import com.wks.wsIm.domain.resp.UserResp;
 import com.wks.wsIm.serializer.JSONSerializer;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -28,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.wks.wsIm.biz.LoginService.SESSION;
+import static com.wks.wsIm.biz.WriteService.send;
+import static com.wks.wsIm.domain.Commands.ERROR;
+import static com.wks.wsIm.domain.Commands.GET_USER_LIST;
 
 /**
  * 处理 WebSocketFrame ，其中控制帧已经在上一个Handler 处理了，所以只需要处理Text 和binary
@@ -57,13 +62,12 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
                 req = serializer.deserialize(msg);
                 result = router.router(generateContext(ctx.channel(),req.getTraceId()), req);
                 if (result != null) {
-                    ctx.channel().writeAndFlush(new TextWebSocketFrame(serializer.serialize(result)));
+                    send(ctx.channel(),result);
                 }
             }
         } catch (Exception e) {
             log.error("handler 错误", e);
-            ctx.channel().writeAndFlush(new TextWebSocketFrame(serializer.serialize(new Packet(req.getTraceId(), new Error()))));
-
+            send(ctx.channel(),new Packet(ERROR,req.getTraceId(), new ErrorResp("handle错误")));
         }
     }
 
@@ -83,12 +87,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
         return context;
     }
 
+    //下线
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
-        Session session = ctx.channel().attr(SESSION).get();
-        if (session == null || session.getUser() == null) return;
-        log.info(session.getUser().getUserName() + "退出登录");
-        UserService.removeUser(session.getUser().getUserId());
+        OffLineService.process(ctx);
     }
 }

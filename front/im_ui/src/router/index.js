@@ -22,17 +22,14 @@ const routes = [
       {
         path: 'Friends',
         component: () => import(/* webpackChunkName: "about" */ '../views/Friends.vue'),
+        
       },
       {
         path: 'Room',
         component: () => import(/* webpackChunkName: "about" */ '../views/Room.vue'),
-        beforeEnter: (to, from, next) => {
-          console.log('获取list')
-          refreshList();
-          next()
-        }
       }
-    ]
+    ],
+    redirect: '/main/Friends' 
   }, {
     path: '/Chat/:sendToId/:sendToName',
     name: 'Chat',

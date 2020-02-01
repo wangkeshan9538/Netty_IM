@@ -15,6 +15,7 @@
  */
 package com.wks.wsIm.server;
 
+import com.wks.wsIm.Util.GodChannel;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -62,6 +63,10 @@ public final class WebSocketServer {
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+        //为反馈Channel的eventLoop设值
+        GodChannel.eventExecutors=workerGroup.next();
+
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)

@@ -3,12 +3,13 @@
     <van-nav-bar left-arrow :title="sendToName" fixed @click-left="back" />
     <div class="contents">
       <van-list finished-text="没有更多了">
-        <template v-for="{time,direct,status,msg,readOrNot} in msg[sendToId]">
+        <template v-for="{time,direct,status,msg} in msg[sendToId]">
           <Message
             v-bind:Messagetype="direct=='send'?'chat-mine':'chat-other'"
             v-bind:Content="msg"
             v-bind:time="time"
-            v-bind:key="time"
+            v-bind:status="status"
+            v-bind:key="direct+time"
           ></Message>
         </template>
       </van-list>
@@ -27,6 +28,7 @@
 import Message from "@/components/Message.vue";
 import router from "@/router";
 import { msgBox, sendMsg } from "@/ws/sendMsg.js";
+import { friendsList } from "@/ws/addFriend.js";
 
 export default {
   name: "Chat",
@@ -49,10 +51,34 @@ export default {
   components: {
     Message
   },
-  created:function(){
-    if(undefined == this.msg[this.sendToId] || null==this.msg[this.sendToId]){
-      this.$set(this.msg,this.sendToId,[])
+  created: function() {
+    console.log('created')
+    if (undefined == this.msg[this.sendToId] ||null == this.msg[this.sendToId]) {
+      this.$set(this.msg, this.sendToId, []);
     }
+  },
+  beforeDestroy: function() {
+    //清除消息提示count
+    var user = friendsList.list.find(v => {
+      return v.userId === this.sendToId;
+    });
+    user.infoCount = 0;
+    console.log("Destroy");
+  },
+
+  beforeRouteUpdate(to, from, next) {
+
+    //防止没有添加
+    if (undefined == this.msg[this.sendToId] ||null == this.msg[this.sendToId]) {
+      this.$set(this.msg, this.sendToId, []);
+    }
+    
+    //清除消息提示count
+    var user = friendsList.list.find(v => {
+      return v.userId === this.sendToId;
+    });
+    user.infoCount = 0;
+    next()
   }
 };
 </script>

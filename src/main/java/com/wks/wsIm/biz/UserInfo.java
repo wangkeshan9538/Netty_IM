@@ -17,12 +17,13 @@ public class UserInfo {
     private volatile String userName;
     private volatile Channel channel;
     private final Set<UserInfo> friends= Sets.newConcurrentHashSet();
+    private volatile  String status;
 
-
-    public UserInfo(String userId, String userName, Channel channel) {
+    public UserInfo(String userId, String userName, Channel channel,String status) {
         this.userId = userId;
         this.userName = userName;
         this.channel = channel;
+        this.status=status;
     }
 
     @Override

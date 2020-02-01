@@ -91,7 +91,8 @@ const commands =new Map([
     ['SEND_MSSAGE','2'],
     ['addFriend','3'],
     ['ADD_NOTIRY','4'],
-    ['MESSAGE_NOTIFY','5']
+    ['MESSAGE_NOTIFY','5'],
+    ['OFFLINE_NOTIFY','6']
 ])
 
 //存储命令对应的处理器

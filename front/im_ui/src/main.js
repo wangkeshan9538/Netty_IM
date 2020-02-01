@@ -10,6 +10,9 @@ import 'vant/lib/index.css';
 import './ws/ws.js'
 import './ws/getUserList.js'
 import './ws/addFriend.js'
+import './ws/sendMsg.js'
+import './ws/OffLineNotify.js'
+
 
 Vue.use(Vant);
 Vue.use(Mint);

@@ -16,4 +16,8 @@ public class Commands {
     public final static String ADD_NOTIRY = "4";
 
     public final static String MESSAGE_NOTIFY = "5";
+
+    public final static String OFFLINE_NOTIFY = "6";
+
+    public final static String ERROR="7";
 }

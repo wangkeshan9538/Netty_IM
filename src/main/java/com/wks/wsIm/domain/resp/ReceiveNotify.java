@@ -6,11 +6,12 @@ import lombok.Data;
 public class ReceiveNotify {
 
     private String fromId;
-
+    private String fromName;
     private String msg;
 
-    public ReceiveNotify(String fromId, String msg) {
+    public ReceiveNotify(String fromId, String fromName, String msg) {
         this.fromId = fromId;
+        this.fromName = fromName;
         this.msg = msg;
     }
 }

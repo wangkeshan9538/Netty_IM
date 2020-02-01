@@ -1,11 +1,14 @@
 <template>
   <div>
+    
     <div v-bind:class="Messagetype">
       <div class="time">
         <cite>
           <i>{{time}}</i>
         </cite>
       </div>
+      <van-loading v-if="Messagetype=='chat-mine'&& status=='P'" style="display:inline-block" size="24"/>
+      <van-icon v-if="Messagetype=='chat-mine'&& status=='F'" name="warning" color="red"/>
       <div class="chat-text">{{Content}}</div>
     </div>
   </div>
@@ -16,11 +19,15 @@
 export default {
   name: "Message",
 
-  props: ["Messagetype", "Content","time"]
+  props: ["Messagetype", "Content", "time","status"]
 };
 </script>
 
-<style>
+<style scoped>
+.van-icon{
+  margin: 10px;
+}
+
 .time {
   font-size: 5px;
   padding-bottom: 4px;

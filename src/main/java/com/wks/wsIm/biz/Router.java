@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static com.wks.wsIm.domain.Commands.ERROR;
+
 /**
  * 根据 packet来路由到对应的service
  */
@@ -57,7 +59,7 @@ public class Router {
             result = clezz.getDeclaredMethod("process",MsgContext.class, Object.class).invoke(clezz.newInstance(), context,req);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
             log.error("方法invoeke 失败", e);
-            return new Packet(p.getTraceId(), new ErrorResp());
+            return new Packet(ERROR, p.getTraceId(), new ErrorResp("未知错误"));
         }
 
 
