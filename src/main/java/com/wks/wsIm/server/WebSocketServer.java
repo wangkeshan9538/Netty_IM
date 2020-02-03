@@ -48,7 +48,7 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  */
 public final class WebSocketServer {
 
-    static final boolean SSL =false ;
+    static final boolean SSL =System.getProperty("ssl") != null ;
     static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "80"));
 
     public static void main(String[] args) throws Exception {
@@ -64,7 +64,7 @@ public final class WebSocketServer {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-        //为反馈Channel的eventLoop设值
+        //为反馈Channel的eventLoop设置
         GodChannel.eventExecutors=workerGroup.next();
 
         try {

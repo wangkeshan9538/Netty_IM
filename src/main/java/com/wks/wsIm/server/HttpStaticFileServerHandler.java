@@ -154,7 +154,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
         }
 
         // Cache Validation
-        String ifModifiedSince =null;// request.headers().get(HttpHeaderNames.IF_MODIFIED_SINCE);
+        String ifModifiedSince =request.headers().get(HttpHeaderNames.IF_MODIFIED_SINCE);
         if (ifModifiedSince != null && !ifModifiedSince.isEmpty()) {
             SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
             Date ifModifiedSinceDate = dateFormatter.parse(ifModifiedSince);
@@ -242,6 +242,10 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
     private static final Pattern INSECURE_URI = Pattern.compile(".*[<>&\"].*");
 
     private static String sanitizeUri(String uri) {
+        if(uri.equals("/")){
+            uri="/index.html";
+        }
+
         // Decode the path.
         try {
             uri = URLDecoder.decode(uri, "UTF-8");
@@ -266,7 +270,8 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
         }
 
         // Convert to absolute path.
-        return "E:\\code\\Netty_IM\\front\\im_ui\\dist" + File.separator + uri;
+        System.out.println(System.getProperty("front_dir") + File.separator + uri);
+        return System.getProperty("front_dir") + File.separator + uri;
     }
 
     private static final Pattern ALLOWED_FILE_NAME = Pattern.compile("[^-\\._]?[^<>&\\\"]*");

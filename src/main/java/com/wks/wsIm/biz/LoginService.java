@@ -33,7 +33,7 @@ public class LoginService extends BaseService<Login, LoginResp> {
             oldUserId = lastLogin.getUser().getUserId();
         }
 
-        log.info("登录=》", login.getUserName());
+        log.info("登录=》"+ login.getUserName());
 
         //generate userID
         String userId = oldUserId == null ? generateUserId() : oldUserId;
