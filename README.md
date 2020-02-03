@@ -1,5 +1,5 @@
 # Netty_IM
-介绍 ： 一个基于vue netty ，使用websocket协议的即时聊天系统
+介绍 ： 一个基于vue netty ，使用websocket协议的即时聊天系统  ， site：http://47.105.88.240:8080/
 
 1.  前端在front 目录下，建议在 vue ui下打包
 2.  后端打包之后 启动命令 java -jar -Dfront_dir=E:\\code\\Netty_IM\\front\\im_ui\\dist netty_im-1.0.jar 
