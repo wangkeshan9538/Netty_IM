@@ -43,6 +43,8 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         if (sslCtx != null) {
             pipeline.addLast(sslCtx.newHandler(ch.alloc()));
         }
+
+        pipeline.addLast(new IMIdleStateHandler());
         pipeline.addLast(new HttpServerCodec());
         pipeline.addLast(new HttpObjectAggregator(65536)); //聚合 htp requet中的chunk内容，
         pipeline.addLast(new ChunkedWriteHandler());//聚合response中的大量数据内容
@@ -50,7 +52,6 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new WebSocketServerCompressionHandler());//在这里处理websocket的扩展，协议升级
         pipeline.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true));//当 会自动add一个握手协议
         pipeline.addLast(new HttpStaticFileServerHandler());//静态页面服务
-        //pipeline.addLast(new WebSocketIndexPageHandler(WEBSOCKET_PATH));
         pipeline.addLast(new WebSocketFrameHandler());
     }
 }

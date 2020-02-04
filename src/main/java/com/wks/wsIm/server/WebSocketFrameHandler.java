@@ -15,24 +15,25 @@
  */
 package com.wks.wsIm.server;
 
-import com.wks.wsIm.biz.*;
+import com.wks.wsIm.biz.MsgContext;
+import com.wks.wsIm.biz.OffLineService;
+import com.wks.wsIm.biz.Router;
 import com.wks.wsIm.domain.Packet;
 import com.wks.wsIm.domain.resp.ErrorResp;
-import com.wks.wsIm.domain.resp.UserResp;
 import com.wks.wsIm.serializer.JSONSerializer;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import static com.wks.wsIm.biz.LoginService.SESSION;
 import static com.wks.wsIm.biz.WriteService.send;
 import static com.wks.wsIm.domain.Commands.ERROR;
-import static com.wks.wsIm.domain.Commands.GET_USER_LIST;
 
 /**
  * 处理 WebSocketFrame ，其中控制帧已经在上一个Handler 处理了，所以只需要处理Text 和binary
@@ -47,6 +48,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
 
     public static JSONSerializer serializer = new JSONSerializer();
 
+    private  static int HEARTBEAT_INTERVAL=10;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) throws Exception {
@@ -92,4 +94,27 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         OffLineService.process(ctx);
     }
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        scheduleSendHeartBeat(ctx);
+
+        super.channelActive(ctx);
+    }
+    /**
+     * 发送心跳
+     * @param ctx
+     * @throws Exception
+     */
+    private void scheduleSendHeartBeat(ChannelHandlerContext ctx) {
+        ctx.executor().schedule(() -> {
+
+            if (ctx.channel().isActive()) {
+                ctx.channel().writeAndFlush(new PingWebSocketFrame());
+                System.out.println("发送");
+                scheduleSendHeartBeat(ctx);
+            }
+
+        }, HEARTBEAT_INTERVAL, TimeUnit.MINUTES);
+    }
+
 }
