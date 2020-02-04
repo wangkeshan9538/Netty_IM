@@ -16,11 +16,11 @@ function pySegSort(arr, empty) {
             var reg = new RegExp('[a-z]')
             var firstWord = item2.split('')[0].toLowerCase()
             if (reg.test(firstWord)) {
-                if ((!en[index - 1] || en[index - 1].localeCompare(item2, "en") <= 0) && item2.localeCompare(en[index], "en") == -1) {
+                if ((!en[index - 1] || en[index - 1].localeCompare(item2, "en") <= 0) && (item2.localeCompare(en[index], "en") == -1|| !en[index]  )) {
                     curr.data.push(user);
                 }
             } else {
-                if ((!zh[index - 1] || zh[index - 1].localeCompare(item2, "zh") <= 0) && item2.localeCompare(zh[index], "zh") == -1) {
+                if ((!zh[index - 1] || zh[index - 1].localeCompare(item2, "zh") <= 0) && (item2.localeCompare(zh[index], "zh") == -1|| !zh[index])) {
                     curr.data.push(user);
                 }
             }

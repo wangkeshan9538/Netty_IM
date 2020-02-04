@@ -1,7 +1,7 @@
 <template>
   <div class="main container">
     <router-view />
-    <van-tabbar>
+    <van-tabbar v-model="active" >
       <van-tabbar-item icon="friends-o" to="/Main/Friends">朋友</van-tabbar-item>
       <van-tabbar-item icon="add-o" to="/Main/Room">在线</van-tabbar-item>
     </van-tabbar>
@@ -12,7 +12,12 @@
 import { Tabbar, TabbarItem } from "vant";
 export default {
   name: "Main",
-  props: {}
+  props: {},
+  data() {
+    return {
+      active: 0
+    };
+  }
 };
 </script>
 

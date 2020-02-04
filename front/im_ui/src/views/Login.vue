@@ -33,7 +33,7 @@
     <van-row type="flex" justify="center">
       <van-col span="12">
         <van-cell-group>
-          <van-field left-icon="contact" v-model="userName" placeholder="请输入用户名" />
+          <van-field left-icon="contact" v-model="userName" placeholder="用户名" />
         </van-cell-group>
       </van-col>
     </van-row>
@@ -41,7 +41,7 @@
     <van-row type="flex" justify="center">
       <van-col span="12">
         <van-cell-group>
-          <van-field left-icon="contact" v-model="passwd" type="password" placeholder="密码" />
+          <van-field left-icon="contact" v-model="passwd" type="password" placeholder="暂不设置密码" />
         </van-cell-group>
       </van-col>
     </van-row>

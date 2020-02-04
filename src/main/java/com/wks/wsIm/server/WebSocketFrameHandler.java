@@ -110,7 +110,6 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
 
             if (ctx.channel().isActive()) {
                 ctx.channel().writeAndFlush(new PingWebSocketFrame());
-                System.out.println("发送");
                 scheduleSendHeartBeat(ctx);
             }
 

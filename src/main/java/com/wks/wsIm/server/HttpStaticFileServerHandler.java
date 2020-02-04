@@ -270,7 +270,6 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
         }
 
         // Convert to absolute path.
-        System.out.println(System.getProperty("front_dir") + File.separator + uri);
         return System.getProperty("front_dir") + File.separator + uri;
     }
 
