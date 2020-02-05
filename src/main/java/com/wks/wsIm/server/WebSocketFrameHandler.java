@@ -48,7 +48,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
 
     public static JSONSerializer serializer = new JSONSerializer();
 
-    private  static int HEARTBEAT_INTERVAL=10;
+    private static int HEARTBEAT_INTERVAL = 10;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) throws Exception {
@@ -56,20 +56,21 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
 
         Packet result = null;
         Packet req = null;
+        String msg = null;
         try {
             messages.add((TextWebSocketFrame) frame);
             if (frame.isFinalFragment()) {
-                String msg = joinMsg(messages);
+                msg = joinMsg(messages);
                 messages.clear();
                 req = serializer.deserialize(msg);
-                result = router.router(generateContext(ctx.channel(),req.getTraceId()), req);
+                result = router.router(generateContext(ctx.channel(), req.getTraceId()), req);
                 if (result != null) {
-                    send(ctx.channel(),result);
+                    send(ctx.channel(), result);
                 }
             }
         } catch (Exception e) {
-            log.error("handler 错误", e);
-            send(ctx.channel(),new Packet(ERROR,req.getTraceId(), new ErrorResp("handle错误")));
+            log.error("handler 错误 " + msg, e);
+            send(ctx.channel(), new Packet(ERROR, req.getTraceId(), new ErrorResp("handle错误")));
         }
     }
 
@@ -82,7 +83,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
         return builder.toString();
     }
 
-    MsgContext generateContext(Channel channel,String traceId) {
+    MsgContext generateContext(Channel channel, String traceId) {
         MsgContext context = new MsgContext();
         context.setChannel(channel);
         context.setTraceId(traceId);
@@ -94,14 +95,17 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         OffLineService.process(ctx);
     }
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         scheduleSendHeartBeat(ctx);
 
         super.channelActive(ctx);
     }
+
     /**
      * 发送心跳
+     *
      * @param ctx
      * @throws Exception
      */

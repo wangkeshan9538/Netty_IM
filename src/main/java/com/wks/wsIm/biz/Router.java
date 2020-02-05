@@ -38,7 +38,7 @@ public class Router {
         });
     }
 
-    public Packet router(MsgContext context,Packet p) throws ClassNotFoundException {
+    public Packet router(MsgContext context, Packet p) throws ClassNotFoundException {
         Class clezz = mapping.get(p.getCommand());
 
         Object result = null;
@@ -49,23 +49,23 @@ public class Router {
 
         //填充req
         // TODO 这块对于入参出参的处理 明显不够好，入参出参带个泛型，就没办法处理了，我觉得用泛型来标志入参出参并不是一个好的方式，应该需要看下springmvc对入参出参怎么处理的
-        Object req =null;
+        Object req = null;
         if (!reqType.equals(Void.class)) {
-            req=serializer.desData(p, reqType);
+            req = serializer.desData(p, reqType);
         }
 
         //process req
         try {
-            result = clezz.getDeclaredMethod("process",MsgContext.class, Object.class).invoke(clezz.newInstance(), context,req);
+            result = clezz.getDeclaredMethod("process", MsgContext.class, Object.class).invoke(clezz.newInstance(), context, req);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
-            log.error("方法invoeke 失败", e);
+            log.error("方法invoeke 失败" + p, e);
             return new Packet(ERROR, p.getTraceId(), new ErrorResp("未知错误"));
         }
 
 
         //处理result
         if (!resptype.equals(Void.class)) {
-            return new Packet(p.getCommand(),p.getTraceId(), result);
+            return new Packet(p.getCommand(), p.getTraceId(), result);
         }
         return null;
     }
