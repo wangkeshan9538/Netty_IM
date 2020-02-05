@@ -1,17 +1,77 @@
-# Netty_IM
-介绍 ： 一个基于vue netty ，使用websocket协议的即时聊天系统
+一个**粗糙**的，**发上来都觉得很羞耻**的，使用vue ,netty 基于websocket的 即时通讯系统。  
+github: https://github.com/wangkeshan9538/Netty_IM  
+site: http://47.105.88.240:8080/  
 
-1.  前端在front 目录下，建议在 vue ui下打包
-2.  后端打包之后 启动命令 java -jar -Dfront_dir=E:\\code\\Netty_IM\\front\\im_ui\\dist netty_im-1.0.jar 
+# 使用示例
 
-启动参数：
--Dfront_dir   --前端打包地址
+![avatar](./doc/ttt.gif)
 
-启动后直接打 http://host  即可访问，登录后 在线页面中 **王柯杉**用户是长久在线，对他说话可以反馈issue到log中
+# 主要结构
 
-主要功能基本完成，待完善或可继续探索的方向：
-1. 暂时没有设置注册，所以登录账号密码不持久保存，关闭页面即失效且从内存中删除用户信息，
-2. ssl 的支持，
-3. 可以做群聊功能
+![avatar](./doc/yyy.png)
 
 
+##  数据包结构为json形式：
+```java
+    private String command;
+
+    private String traceId;
+
+    private Object data;
+```
+command 表示数据包指令类型，  
+因为websocket协议是全双工，并不能像http协议一样一问一答的形式，所以对于client，在原生协议上无法链接一个request和一个response,所以使用traceId来判断，  
+data为数据  
+
+## 前端结构说明
+如果是一问一答的需要traceId 的应答模式，则对req,以及对应的回调方法打包进队列，如果resp回应，则回调处理  
+如果是单向的，则根据command 来找到注册的处理方法处理
+
+## 后端结构
+handler:
+
+``` java
+        pipeline.addLast(new IMIdleStateHandler()); //空闲连接处理，超时则关闭
+        pipeline.addLast(new HttpServerCodec());//http协议编解码器
+        pipeline.addLast(new HttpObjectAggregator(65536)); //聚合 htp requet中的chunk内容，
+        pipeline.addLast(new ChunkedWriteHandler());//聚合response中的大量数据内容
+        pipeline.addLast(new WebSocketServerCompressionHandler());//处理websocket的扩展以及判断协议升级
+        pipeline.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true));//会自动添加websocket握手handler,握手完成会添加websocket的编解码器
+        pipeline.addLast(new HttpStaticFileServerHandler());//静态页面服务，
+        pipeline.addLast(new WebSocketFrameHandler()); //业务流程的开始 
+```
+
+业务方法举例：
+
+``` java
+@Command(ADD_FRIENDS)
+public class AddFriendsService extends BaseService<AddFriendReq, AddFriendResp> {
+
+    @Override
+    AddFriendResp process(MsgContext context, AddFriendReq addFriendReq) {
+        UserService.addFriend(addFriendReq.getUserId(), addFriendReq.getAddId());
+
+        //响应被添加者
+        UserInfo userInfo = UserService.getUserInfo(addFriendReq.getUserId());
+        Packet p = new Packet(ADD_NOTIRY, null, new AddFriendNotify(userInfo.getUserId(), userInfo.getUserName()));
+        UserInfo addedUserInfo = UserService.getUserInfo(addFriendReq.getAddId());
+        send(addedUserInfo.getChannel(), p);
+
+        return new AddFriendResp("SUCCESS", "SUCCESS", addedUserInfo.getUserId(), addedUserInfo.getUserName());
+    }
+}
+
+```
+@Command为自定义注解，标注处理的command类型，泛型为req,resp的类型，
+
+## 运行
+前端： vue ui直接打包
+后端：  java -jar -Dfront_dir=E:\code\Netty_IM\front\im_ui\dist -Dport=8080 netty_im-1.0.jar
+front_dir 为前端目录
+port
+
+## TODO
+其实看起来完全就是个粗糙的玩具，列一些后续可以继续做的方向吧，虽然我这么懒估计也不会去做
+1. netty 用起来还是有点太底层了，静态服务器的代码都要自己找，所以可以考虑换成vertx,比较小清新，还能做集群
+2. 想做一个压测工具，来压测下性能，
+3. ssl的支持，
