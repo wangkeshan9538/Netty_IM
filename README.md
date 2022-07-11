@@ -1,4 +1,4 @@
-一个**粗糙**的，**发上来都觉得很羞耻**的，使用vue ,netty 基于websocket的 即时通讯系统。  
+使用vue ,netty 基于websocket的 即时通讯系统。  
 github: https://github.com/wangkeshan9538/Netty_IM  
 site: http://47.105.88.240:8080/  
 
